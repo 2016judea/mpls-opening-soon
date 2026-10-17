@@ -28,12 +28,11 @@ before they post a single job, and who decides.
 |---|---|---|
 | address, stage, signals, dates, permit text, builder | Minneapolis permit register, on-sale liquor list, food inspections | yes, all 201 rows |
 | kind | read from the permit text / occupancy code | yes (10 rows "Other business") |
-| business name | the city's liquor or health record names it; permits do not (parsing names from permit text was wrong 3 of 4 times, so it isn't done) | 89 of 201 |
+| business name | the city's liquor or health record names it (89), plus 4 from a single matching Google listing; permits do not (parsing names from permit text was wrong 3 of 4 times, so it isn't done) | 93 of 201 |
 | owner/manager, entity, state filing | MN Secretary of State, exact-name match | entity 66, a named manager or CEO 14 |
 | expected opening date | not published | **no**: proxied by stage (final inspection = last step) |
 | headcount / open job posts | not in any public record we hold | **no** |
-| phone, website | Google Places (the 10/05 Blue Vector build used it) is a paid API, a spending gate | **no**: not called. Roughly 200 text searches would fill it |
+| phone, website, Google status | Google Maps: Outscraper by name + address for the 89 named rows, Google Places Nearby (40 m) for the rest, cached in `private/cache/places/`; accepted only on the same street address (and agreeing name, or a single business of the right kind) | phone 64, website 56, matched 71 of 201 (2026-10-17, ~$4.93). Named rows match 67 of 89; unnamed only 4 of 112, because towers hold many tenants and a space not yet open still shows its old occupant on Google |
 
 Verdict: build, with the gap stated. The stage signal (what the recruiter can't get anywhere
-else) fills completely; contact fills for the named minority. The cheapest way to close the
-contact gap is the Google Places step, which needs Aidan's OK to spend.
+else) fills completely; contact fills for the named minority. Phone and website were filled from Google Maps on 2026-10-17 (Aidan approved the spend).
