@@ -42,6 +42,17 @@ def request(url, token, data=None, headers=None):
 BUNDLE = ROOT.parent / "private" / "bundle"  # the paid table: uploaded as api/_full/, read by the functions only
 
 
+# Only public/ is static (vercel.json outputDirectory). The upload used to put every file at the
+# deployment root with outputDirectory ".", so api/_full/* was a static URL and the redirect on
+# /api/_full/ matched the raw path only: /api/%5Ffull/<f>, /api/_full%2F<f> and /api/_full/<f>/
+# each served the paid bundle (curl, 2026-10-19). Static files now upload under public/; api/
+# and a root copy of the files the functions require() stay outside it, where nothing serves them.
+def upload_paths(rel):
+    if rel.parts[0] == "api" or str(rel) == "vercel.json":
+        return [rel]
+    return [Path("public") / rel, rel]
+
+
 def collect():
     assert (BUNDLE / "full.json.gz").exists(), "run scripts/build_public.py: private/bundle/ is what the paywall serves"
     for path in sorted(ROOT.rglob("*")):
@@ -50,7 +61,8 @@ def collect():
         rel = path.relative_to(ROOT)
         if any(part in SKIP_DIRS for part in rel.parts) or rel.name in SKIP_FILES or "_full" in rel.parts:
             continue
-        yield rel, path
+        for out in upload_paths(rel):
+            yield out, path
     for path in sorted(BUNDLE.rglob("*")):
         if path.is_file():
             yield Path("api/_full") / path.relative_to(BUNDLE), path
