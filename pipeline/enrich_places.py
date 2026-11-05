@@ -29,9 +29,9 @@ DRY = "--dry-run" in sys.argv
 def env(k):
     v = os.environ.get(k)
     if not v:
-        for line in open(Path.home() / "Desktop/bricks/.env"):
+        for line in open(Path.home() / "Desktop/workspace/bricks/.env"):
             if line.startswith(k + "="): v = line.split("=", 1)[1].strip().strip('"')
-    if not v: sys.exit(f"{k} missing from env and ~/Desktop/bricks/.env")
+    if not v: sys.exit(f"{k} missing from env and ~/Desktop/workspace/bricks/.env")
     return v
 
 
